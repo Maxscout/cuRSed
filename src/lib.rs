@@ -1,3 +1,4 @@
+#![allow(non_snake_case)] // "cuRSed" is considered non snake case so just turn it off
 pub mod style;
 mod window;
 
