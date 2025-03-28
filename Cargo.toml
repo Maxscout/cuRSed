@@ -1,0 +1,7 @@
+[package]
+name = "cuRSed"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+neutuino = { git = "https://github.com/Xyverle/neutuino", version = "0.1.0" }
