@@ -2,18 +2,21 @@
 pub mod style;
 mod window;
 
+use std::collections::HashMap;
+use std::io::ErrorKind;
 use std::io::Stdout;
 use std::io::Write;
 
 use neutuino::os::RawTerminal;
 use style::Style;
 use window::Window;
+use window::WindowId;
 
 pub struct Terminal {
     raw_terminal: RawTerminal,
     stdout: Stdout,
 
-    windows: Vec<Window>,
+    windows: HashMap<WindowId, Window>,
 }
 
 impl Terminal {
@@ -27,7 +30,7 @@ impl Terminal {
         Ok(Self {
             raw_terminal,
             stdout,
-            windows: Vec::new(),
+            windows: HashMap::new(),
         })
     }
 
@@ -35,6 +38,16 @@ impl Terminal {
         self.stdout.write(style.apply().as_bytes())?;
         self.stdout.write(str.into().as_bytes())?;
         Ok(())
+    }
+
+    pub fn refresh(&mut self) {}
+
+    pub fn window_from_id(&mut self, window_id: &WindowId) -> std::io::Result<&mut Window> {
+        if self.windows.contains_key(window_id) {
+            Ok(self.windows.get_mut(window_id).unwrap())
+        } else {
+            Err(ErrorKind::InvalidInput.into())
+        }
     }
 
     pub fn quit(self) { /* Do nothing (Drop) */
